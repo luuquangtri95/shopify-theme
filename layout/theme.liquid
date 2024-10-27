@@ -3,14 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Mini test</title>
 
+	{{ 'application.css' | asset_url | stylesheet_tag }}
+	
 	{{ content_for_header }}
 	
 </head>
 <body>
-	
-	<main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+	<div class="text-[24px]">ádsaddsa</div>
+	<main>
 		{{ content_for_layout }}
 	  </main>
 </body>
