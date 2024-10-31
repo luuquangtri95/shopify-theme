@@ -1,19 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Mini test</title>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini test</title>
 
-	{{ 'application.css' | asset_url | stylesheet_tag }}
-	
-	{{ content_for_header }}
-	
-</head>
-<body>
-	<div class="text-[24px]">ádsaddsa</div>
-	<main>
-		{{ content_for_layout }}
-	  </main>
-</body>
+    {{ 'application.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
+  </head>
+  <body>
+    {% section 'header' %}
+    <main>
+      {{ content_for_layout }}
+    </main>
+
+    <!-- Thêm vào cuối <body> để import JavaScript của Tiny Slider -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>
+  </body>
 </html>
