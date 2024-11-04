@@ -1,55 +1,68 @@
 {% assign id_section = section.id %}
 
-<!-- sections/slideshow.liquid -->
-<div class="slideshow {{ id_section }}">
-  {% for block in section.blocks %}
-    <div class="slide {% if section.settings.option_for_slider == 'scale_equal' %} relative {% endif %}">
-      {% if block.settings.image != blank %}
-        <div class="{% if section.settings.option_for_slider == 'scale_equal' %} relative pt-[100%] {% endif %}">
-          <img
-            src="{{ block.settings.image | img_url: 'large' }}"
-            alt="{{ block.settings.alt_text | default: 'Default image' }}"
-            width="100%"
-            height="100%"
-            class="{% if section.settings.option_for_slider == 'scale_equal' %} absolute top-0 left-0 object-cover w-full h-full {% endif %}"
-          >
+{% comment %} slider {% endcomment %}
+{% if section.settings.block_or_slider == 'slideshow' %}
+  <div class="slideshow {{ id_section }}">
+    {% for block in section.blocks %}
+      {% if block.type == 'slideshow' %}
+        <div class="slide {% if section.settings.option_for_slider == 'scale_equal' %} relative {% endif %}">
+          {% if block.settings.image != blank %}
+            <div class="{% if section.settings.option_for_slider == 'scale_equal' %} relative pt-[100%] {% endif %}">
+              <img
+                src="{{ block.settings.image | img_url: 'large' }}"
+                alt="{{ block.settings.alt_text | default: 'Default image' }}"
+                width="100%"
+                height="100%"
+                class="{% if section.settings.option_for_slider == 'scale_equal' %} absolute top-0 left-0 object-cover w-full h-full {% endif %}"
+              >
+            </div>
+          {% endif %}
         </div>
       {% endif %}
-    </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
 
-<script>
-  // Khởi tạo slider khi trang đã sẵn sàng
-  document.addEventListener('DOMContentLoaded', function () {
-  var slider = tns({
+  <script>
+     document.addEventListener('DOMContentLoaded', function () {
+     var slider = tns({
       container: '.{{ id_section }}',
       items: 1,
       slideBy: 'page',
-      autoplay: !!'{% if section.settings.auto_play == 'auto_play_on' %} 1 {% else %} 0 {% endif %}',
-  	  autoplayTimeout: 1000,
+      autoplay: {% if section.settings.auto_play == 'auto_play_on' %} true {% else %} false {% endif %},
+      autoplayTimeout: 1000,
       autoplayButtonOutput: false,
       controls: false,
       nav: false,
       gutter: 10,
       loop: false,
     });
+     });
+  </script>
+{% endif %}
 
-    // // Kiểm tra nếu đang trong Theme Editor và cập nhật khi có thay đổi
-    // if (Shopify.designMode) {
-    //   document.addEventListener('shopify:section:load', initSlider);
-    //   document.addEventListener('shopify:section:unload', initSlider);
-    //   document.addEventListener('shopify:section:select', initSlider);
-    //   document.addEventListener('shopify:section:deselect', initSlider);
-    //   document.addEventListener('shopify:block:select', initSlider);
-    //   document.addEventListener('shopify:block:deselect', initSlider);
-    // }
-  });
-</script>
+{% comment %} block static {% endcomment %}
+{% if section.settings.block_or_slider == 'image_banner' %}
+  <div class="block-container">
+    {% for block in section.blocks %}
+      {% if block.type == 'image_banner' %}
+        <div class="block-content h-[300px] relative" style="background-color: {{ block.settings.block_background }}">
+          <img
+            src="{{block.settings.image | img_url: 'large' }}"
+            alt="{{ block.settings.alt_text | default: 'Default image' }}"
+            width="100%"
+            height="100%"
+            class="absolute top-0 left-0 w-full h-full object-cover"
+          >
+          <p>{{ block.settings.block_text }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
 
 {% schema %}
 {
-  "name": "Blocks",
+  "name": "Custom block",
   "settings": [
     {
       "type": "radio",
@@ -57,14 +70,15 @@
       "label": "Choose block or slider",
       "options": [
         {
-          "value": "slider",
-          "label": "slider"
+          "value": "slideshow",
+          "label": "Slideshow"
         },
         {
-          "value": "block",
-          "label": "block"
+          "value": "image_banner",
+          "label": "Image Banner"
         }
-      ]
+      ],
+      "default": "slideshow"
     },
     {
       "type": "radio",
@@ -101,8 +115,8 @@
   ],
   "blocks": [
     {
-      "type": "image_slide",
-      "name": "Image Slide",
+      "type": "slideshow",
+      "name": "image for slideshow",
       "settings": [
         {
           "type": "image_picker",
@@ -116,12 +130,43 @@
           "default": "Slide Image"
         }
       ]
+    },
+    {
+      "type": "image_banner",
+      "name": "image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image"
+        },
+        {
+          "type": "text",
+          "id": "block_text",
+          "label": "Block Text",
+          "default": "This is block content"
+        },
+        {
+          "type": "color",
+          "id": "block_background",
+          "label": "Background Color",
+          "default": "#ffffff"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Slideshow",
-      "category": "Image"
+      "settings": {
+        "block_or_slider": "slideshow"
+      }
+    },
+    {
+      "name": "Image Banner",
+      "settings": {
+        "block_or_slider": "image_banner"
+      }
     }
   ]
 }

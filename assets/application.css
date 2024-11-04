@@ -588,6 +588,10 @@ video {
   }
 }
 
+.static {
+  position: static;
+}
+
 .absolute {
   position: absolute;
 }
@@ -650,6 +654,10 @@ video {
 
 .h-full {
   height: 100%;
+}
+
+.h-\[300px\] {
+  height: 300px;
 }
 
 .w-full {
